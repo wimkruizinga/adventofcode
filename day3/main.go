@@ -7,37 +7,59 @@ import (
 	"strconv"
 )
 
+type filterFunc func([]string, []string) []string
+
 func main() {
-	rows := processFile(`input.txt`)
-	rowCount := len(rows)
-	cols := len(rows[0])
-	var gammaBin, epsilonBin string
+	rows := readFile(`input.txt`)
 
-COLUMNS:
-	for i := 0; i < cols; i++ {
-		var ones int
+	oxygenRating := getRating(rows, oxygenRatingFilter)
+	co2Rating := getRating(rows, co2RatingFilter)
 
-		for _, row := range rows {
-			if row[i] == '1' {
-				ones++
-			}
-			if float64(ones) > (0.5 * float64(rowCount)) {
-				gammaBin += `1`
-				epsilonBin += `0`
-				continue COLUMNS
-			}
-		}
-		gammaBin += `0`
-		epsilonBin += `1`
-	}
-
-	gamma := binToDecimal(gammaBin)
-	epsilon := binToDecimal(epsilonBin)
-
-	fmt.Println(`Power consumption: `, gamma*epsilon)
+	fmt.Println(`Life support rating: `, oxygenRating*co2Rating)
 }
 
-func processFile(fileName string) []string {
+func getRating(input []string, filter filterFunc) int64 {
+	binRating := applyFilter(input, 0, filter)[0]
+
+	return binToDecimal(binRating)
+}
+
+func applyFilter(input []string, pos int, filter filterFunc) []string {
+	if len(input) == 1 {
+		return input
+	}
+
+	var ones, zeroes []string
+	for _, row := range input {
+		if row[pos] == '1' {
+			ones = append(ones, row)
+		} else {
+			zeroes = append(zeroes, row)
+		}
+	}
+
+	result := filter(ones, zeroes)
+
+	return applyFilter(result, pos+1, filter)
+}
+
+func oxygenRatingFilter(ones, zeroes []string) []string {
+	if len(ones) >= len(zeroes) {
+		return ones
+	} else {
+		return zeroes
+	}
+}
+
+func co2RatingFilter(ones, zeroes []string) []string {
+	if len(ones) < len(zeroes) {
+		return ones
+	} else {
+		return zeroes
+	}
+}
+
+func readFile(fileName string) []string {
 	file, err := os.Open(fileName)
 	if err != nil {
 		panic(err)
