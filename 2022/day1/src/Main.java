@@ -16,7 +16,14 @@ public class Main {
         }
 
         Elf theBest = Collections.max(elves, Comparator.comparingInt(Elf::getTotalCalories));
-        System.out.printf("Elf number %d carries the most calories: %d", elves.indexOf(theBest) + 1, theBest.getTotalCalories());
+        System.out.printf("Elf number %d carries the most calories: %d\n", elves.indexOf(theBest) + 1, theBest.getTotalCalories());
+
+        elves.sort(Comparator.comparingInt(Elf::getTotalCalories).reversed());
+        int total = 0;
+        for (int i = 0; i < 3; i++) {
+            total += elves.get(i).getTotalCalories();
+        }
+        System.out.printf("The top 3 elves carry a total of %d calories.\n", total);
     }
 
     public static List<Elf> process(BufferedReader reader) throws IOException {
