@@ -10,7 +10,7 @@ public class Main {
         List<Game> games = new ArrayList<>();
         String line;
         while((line = reader.readLine()) != null) {
-            Game game = Game.play(line.charAt(2), line.charAt(0));
+            Game game = Game.getPlayerShape(line.charAt(0), line.charAt(2));
             System.out.println(game);
             games.add(game);
         }

@@ -27,21 +27,16 @@ public class Game {
 
     private Shape playerShape;
     private Shape opponentShape;
-    private Outcome outcome;
+    private Outcome desiredOutcome;
 
     private Game() {}
 
-    public static Game play(char playerShape, char opponentShape) throws Exception {
+    public static Game getPlayerShape(char opponentShape, char desiredOutcome) throws Exception {
         Game game = new Game()
-                .withPlayerShape(playerShape)
-                .withOpponentShape(opponentShape);
-        game.outcome = game.play();
+                .withOpponentShape(opponentShape)
+                .withDesiredOutcome(desiredOutcome);
+        game.playerShape = game.getPlayerShape();
         return game;
-    }
-
-    private Game withPlayerShape(char playerShape) throws Exception {
-        this.playerShape = getShapeEnum(playerShape);
-        return this;
     }
 
     private Game withOpponentShape(char opponentShape) throws Exception {
@@ -49,50 +44,65 @@ public class Game {
         return this;
     }
 
+    private Game withDesiredOutcome(char gameOutcome) throws Exception {
+        this.desiredOutcome = getOutcomeEnum(gameOutcome);
+        return this;
+    }
+
     private Shape getShapeEnum(char shape) throws Exception {
         switch (shape) {
             case 'A':
-            case 'X':
                 return Shape.ROCK;
             case 'B':
-            case 'Y':
                 return Shape.PAPER;
             case 'C':
-            case 'Z':
                 return Shape.SCISSORS;
             default:
                 throw new Exception("Invalid shape");
         }
     }
 
-    private Outcome play() {
-        switch (playerShape) {
+    private Outcome getOutcomeEnum(char outcome) throws Exception {
+        switch (outcome) {
+            case 'X':
+                return Outcome.LOSE;
+            case 'Y':
+                return Outcome.DRAW;
+            case 'Z':
+                return Outcome.WIN;
+            default:
+                throw new Exception("Invalid outcome");
+        }
+    }
+
+    private Shape getPlayerShape() {
+        switch (opponentShape) {
             case ROCK:
-                switch (opponentShape) {
-                    case ROCK:
-                        return Outcome.DRAW;
-                    case PAPER:
-                        return Outcome.LOSE;
-                    case SCISSORS:
-                        return Outcome.WIN;
+                switch (desiredOutcome) {
+                    case WIN:
+                        return Shape.PAPER;
+                    case DRAW:
+                        return Shape.ROCK;
+                    case LOSE:
+                        return Shape.SCISSORS;
                 }
             case PAPER:
-                switch (opponentShape) {
-                    case ROCK:
-                        return Outcome.WIN;
-                    case PAPER:
-                        return Outcome.DRAW;
-                    case SCISSORS:
-                        return Outcome.LOSE;
+                switch (desiredOutcome) {
+                    case WIN:
+                        return Shape.SCISSORS;
+                    case DRAW:
+                        return Shape.PAPER;
+                    case LOSE:
+                        return Shape.ROCK;
                 }
             case SCISSORS:
-                switch (opponentShape) {
-                    case ROCK:
-                        return Outcome.LOSE;
-                    case PAPER:
-                        return Outcome.WIN;
-                    case SCISSORS:
-                        return Outcome.DRAW;
+                switch (desiredOutcome) {
+                    case WIN:
+                        return Shape.ROCK;
+                    case DRAW:
+                        return Shape.SCISSORS;
+                    case LOSE:
+                        return Shape.PAPER;
                 }
         }
         return null;
@@ -101,7 +111,7 @@ public class Game {
     @Override
     public String toString() {
         int points = getPoints();
-        switch (this.outcome) {
+        switch (this.desiredOutcome) {
             case DRAW:
                 return String.format("It's a draw! %d points.", points);
             case WIN:
@@ -114,6 +124,6 @@ public class Game {
     }
 
     public int getPoints() {
-        return playerShape.score + outcome.score;
+        return playerShape.score + desiredOutcome.score;
     }
 }
