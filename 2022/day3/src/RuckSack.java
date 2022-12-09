@@ -28,6 +28,10 @@ public class RuckSack {
         return getPriority(duplicate);
     }
 
+    public boolean contains(Character c) {
+        return this.pocketA.contains(c) || this.pocketB.contains(c);
+    }
+
     private Character getDuplicate() {
         for (Character character : pocketA) {
             if (pocketB.contains(character)) {
