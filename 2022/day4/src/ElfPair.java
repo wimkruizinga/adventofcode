@@ -13,14 +13,26 @@ public class ElfPair {
     }
 
     public boolean assignmentsOverlap() {
-        if (assignmentA.getFirstSection() < assignmentB.getFirstSection()) {
-            return assignmentB.getLastSection() <= assignmentA.getLastSection();
+        // Part 1
+//        if (assignmentA.getFirstSection() < assignmentB.getFirstSection()) {
+//            return assignmentB.getLastSection() <= assignmentA.getLastSection();
+//        }
+//
+//        if (assignmentB.getFirstSection() < assignmentA.getFirstSection()) {
+//            return assignmentA.getLastSection() <= assignmentB.getLastSection();
+//        }
+//
+//        return (assignmentA.getFirstSection() == assignmentB.getFirstSection());
+
+        // Part 2
+        if (assignmentA.getFirstSection() <= assignmentB.getFirstSection() && assignmentA.getLastSection() >= assignmentB.getFirstSection()) {
+            return true;
         }
 
-        if (assignmentB.getFirstSection() < assignmentA.getFirstSection()) {
-            return assignmentA.getLastSection() <= assignmentB.getLastSection();
+        if (assignmentB.getFirstSection() <= assignmentA.getFirstSection() && assignmentB.getLastSection() >= assignmentA.getFirstSection()) {
+            return true;
         }
 
-        return (assignmentA.getFirstSection() == assignmentB.getFirstSection());
+        return false;
     }
 }
