@@ -103,9 +103,13 @@ public class ElvishCraneDriver {
     }
 
     public void applyMove(Move move) {
+        Stack<Character> chars = new Stack<>();
         for (int i = 0; i < move.getAmount(); i++) {
-            Character ch = stacks.get(move.getFrom()).pop();
-            stacks.get(move.getTo()).push(ch);
+            chars.push(stacks.get(move.getFrom()).pop());
+        }
+
+        while (!chars.isEmpty()) {
+            stacks.get(move.getTo()).push(chars.pop());
         }
     }
 
