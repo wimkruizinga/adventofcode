@@ -3,6 +3,8 @@ package org.example;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -20,8 +22,19 @@ public class Main {
             });
         }
 
-        locationData.sortLists();
+        System.out.printf("Total difference: %d%n", locationData.calculateTotalDistance());
+        System.out.printf("Similarity score: %d%n", calculateSimilarity(locationData));
+    }
 
-        System.out.printf("Total difference: %d\n", locationData.calculateTotalDistance());
+    private static Integer calculateSimilarity(LocationData locationData) {
+        Map<Integer, Integer> numberOccurrences = new HashMap<>();
+
+        locationData.getListB().forEach(location -> {
+            numberOccurrences.merge(location, 1, Integer::sum);
+        });
+
+        return locationData.getListA().stream()
+                .mapToInt(location -> location * numberOccurrences.getOrDefault(location, 0))
+                .sum();
     }
 }

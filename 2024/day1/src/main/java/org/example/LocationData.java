@@ -16,12 +16,8 @@ public class LocationData {
         this.listB = new ArrayList<>();
     }
 
-    public void sortLists() {
-        Collections.sort(listA);
-        Collections.sort(listB);
-    }
-
     public Integer calculateTotalDistance() {
+        sortLists();
         var pairs = listA.size();
         int totalDistance = 0;
         for (int i = 0; i < pairs; i++) {
@@ -29,5 +25,10 @@ public class LocationData {
         }
 
         return totalDistance;
+    }
+
+    private void sortLists() {
+        Collections.sort(listA);
+        Collections.sort(listB);
     }
 }
